@@ -1,0 +1,11 @@
+# dist
+public
+
+# node
+node_modules
+
+# other
+.DS_Store
+
+#keep
+!.gitkeep

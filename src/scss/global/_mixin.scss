@@ -1,0 +1,72 @@
+//common
+@mixin inner() {
+	width: 90%;
+	max-width: $contents-width;
+	margin: 0 auto;
+	@content;
+}
+
+//メディア
+@mixin sp($max-width: $sp-width) {
+	@media only screen and(max-width: $max-width) {
+		@content;
+	}
+}
+
+@mixin tb {
+	@media only screen and(max-width:950px) and (min-width: 550px) {
+		@content;
+	}
+}
+
+@mixin pc($min-width: $sp-width + 1px) {
+	@media only screen and(min-width: $min-width) {
+		@content;
+	}
+}
+
+[data-media='pc'] {
+	@include sp {
+		display: none;
+	}
+}
+[data-media='sp'] {
+	@include pc {
+		display: none;
+	}
+}
+
+//IE対応用
+@mixin isIE() {
+	@media screen and (-ms-high-contrast: active),
+		screen and (-ms-high-contrast: none) {
+		@content;
+	}
+}
+
+//フルサイズ
+@mixin full() {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	@content;
+}
+
+//縦書き
+@mixin rl() {
+	-webkit-writing-mode: vertical-rl;
+	-ms-writing-mode: tb-rl;
+	writing-mode: vertical-rl;
+	@content;
+}
+
+// inputのスタイルをリセット
+@mixin inputReset {
+	background: none;
+	appearance: none;
+	border: none;
+	outline: none;
+	@content;
+}

@@ -1,0 +1,10 @@
+.cache
+package.json
+package-lock.json
+wp-content
+assets
+.docker
+ore-three-ts
+*.code-workspace
+plugins
+gulpfile.js

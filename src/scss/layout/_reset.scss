@@ -1,0 +1,29 @@
+// reset
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	position: relative;
+	color: #242424;
+	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+		'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+}
+
+img {
+	max-width: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+ul {
+	li {
+		list-style: none;
+	}
+}
