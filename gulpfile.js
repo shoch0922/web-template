@@ -11,8 +11,7 @@ const del = require("del");
 const minimist = require("minimist");
 const browserSync = require("browser-sync");
 const eslint = require('gulp-eslint');
-const { reload } = require('browser-sync');
-
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // コマンドラインオプション
 const options = minimist(process.argv.slice(2), {
@@ -28,7 +27,15 @@ const conf = {
 	// 出力先
 	out: "./public/",
 	// autoprefixer
-	prefix: null
+	prefix: null,
+	// middlewareを使うとき
+	middleware: false,
+	// 別サーバーのAPIを使うとき
+	api: {
+		url: null,
+		target: null,
+		auth: null
+	}
 }
 
 function isFixed(file) {
@@ -51,12 +58,29 @@ function lint(done) {
 
 // サーバー設定
 function server () {
+
+	// Middlewareを定義する
+	const middleware = [];
+
+	// APIプロキシ用のMiddleware
+	if(conf.api.url) {
+		middleware.push(
+			createProxyMiddleware(conf.api.url, {
+				target: conf.api.target,
+				// Basic認証がある場合はユーザ名とパスワードをコロンでつなげると自動で認証してくれる
+				auth: conf.api.auth,
+				changeOrigin: true,
+			})
+		)
+	}
+
 	// プロキシの場合
 	if(conf.port) {
 		browserSync.init({
 			proxy: {
 				target: "http://localhost:" + conf.port,
-				ws: true
+				ws: true,
+				middleware: middleware
 			},
 			notify: false,
 			ghostMode: false
@@ -65,7 +89,8 @@ function server () {
 	} else {
 		browserSync.init({
 			server: {
-				baseDir: "./public/"
+				baseDir: "./public/",
+				middleware: middleware
 			}
 		});
 	}
@@ -101,7 +126,8 @@ function sassBuild() {
 		.pipe(plumber())
 		.pipe(cssmin())
 		.pipe(autoprefixer(conf.prefix))
-		.pipe(gulp.dest(conf.out + "assets/css/"));
+		.pipe(gulp.dest(conf.out + "assets/css/"))
+		.pipe(browserSync.stream());
 }
 
 // copy
@@ -122,7 +148,7 @@ function clean(done) {
 // watch
 function watch() {
 	gulp.watch("./src/ts/**/*", gulp.series(tsBuild, BrReload));
-	gulp.watch("./src/scss/*.scss", gulp.series(sassBuild, BrReload));
+	gulp.watch("./src/scss/*.scss", gulp.series(sassBuild));
 	gulp.watch(["./src/assets/**/*", "./src/html/**/*"], gulp.series(copy, BrReload));
 }
 

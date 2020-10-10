@@ -24,6 +24,7 @@
     "gulp-if": "^3.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-sass": "^4.1.0",
+    "http-proxy-middleware": "^1.0.5",
     "minimist": "^1.2.5",
     "prettier": "^2.1.2",
     "ts-loader": "^8.0.4",
